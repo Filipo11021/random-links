@@ -1,5 +1,6 @@
 packages:
   - 'apps/*'
+  - 'packages/*'
 catalog:
   "hono": "^4.9.9"
   "better-auth": "^1.3.26"

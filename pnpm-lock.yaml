@@ -131,7 +131,7 @@ importers:
         specifier: ^5.1.4
         version: 5.1.4(typescript@5.9.3)(vite@7.1.9(@types/node@24.6.2)(jiti@2.6.1)(lightningcss@1.30.1))
 
-  packages/result:
+  packages/type-safe-errors:
     dependencies:
       vitest:
         specifier: ^3.2.4
