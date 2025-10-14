@@ -8,6 +8,7 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@heroui/react";
+import { err, ok, type Result } from "@repo/type-safe-errors";
 import { Plus, Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
@@ -24,17 +25,12 @@ import { createTag, deleteTag, getAllTags, updateTag } from "~/data/tags";
 import type { Tag } from "~/data/types";
 import type { Route } from "./+types/tags";
 
-export async function clientLoader() {
-  const [tags, links] = await Promise.all([getAllTags(), getAllLinks()]);
-  return { tags, links };
-}
-
 type HiddenField<T extends string> = {
   name: T;
   value: string;
 };
 
-type Action =
+export type Action =
   | {
       name: "create";
       hiddenFields: [];
@@ -50,11 +46,11 @@ type Action =
 
 const actionTypeName = "_action";
 
-function getActionName<T extends Action["name"]>(name: T): T {
+export function getActionName<T extends Action["name"]>(name: T): T {
   return name;
 }
 
-function useActionIsLoading(actionName: Action["name"]) {
+export function useActionIsLoading(actionName: Action["name"]) {
   const navigation = useNavigation();
   return (
     navigation.state === "submitting" &&
@@ -62,16 +58,31 @@ function useActionIsLoading(actionName: Action["name"]) {
   );
 }
 
-function useActionResult(actionName: Action["name"]) {
-  const actionData = useActionData<{ success: boolean; action: string }>();
-  if (actionData?.action === actionName) {
+type ActionData = Result<
+  {
+    action: Action["name"];
+  },
+  {
+    action: Action["name"] | null;
+    message: string;
+  }
+>;
+
+export function useActionResult(actionName: Action["name"]) {
+  const actionData = useActionData<ActionData>();
+
+  if (actionData?.ok && actionData.value.action === actionName) {
+    return actionData;
+  }
+
+  if (!actionData?.ok && actionData?.error.action === actionName) {
     return actionData;
   }
 
   return null;
 }
 
-function ActionMetadata({ action }: { action: Action }) {
+export function ActionMetadata({ action }: { action: Action }) {
   return (
     <>
       <input type="hidden" name={actionTypeName} value={action.name} />
@@ -82,32 +93,68 @@ function ActionMetadata({ action }: { action: Action }) {
   );
 }
 
-export async function clientAction({ request }: Route.ClientActionArgs) {
+function DisplayErrorMessage({
+  actionData,
+}: {
+  actionData: ActionData | null;
+}) {
+  if (!actionData) return null;
+  if (actionData?.ok) return null;
+  return <p className="text-red-500">{actionData?.error.message}</p>;
+}
+
+export async function clientLoader() {
+  const [tags, links] = await Promise.all([getAllTags(), getAllLinks()]);
+  return { tags, links };
+}
+
+export async function clientAction({
+  request,
+}: Route.ClientActionArgs): Promise<ActionData> {
   const formData = await request.formData();
-  const action = formData.get("_action");
+  const action = formData.get(actionTypeName);
 
   if (action === getActionName("create")) {
     const name = formData.get("name") as string;
     const color = formData.get("color") as string;
-    await createTag({ name, color });
-    return { success: true, action: getActionName("create") };
+    const result = await createTag({ name, color });
+
+    if (!result.ok)
+      return err({
+        action,
+        message: result.error,
+      });
+    return ok({ action });
   }
 
   if (action === getActionName("update")) {
     const id = formData.get("id") as string;
     const name = formData.get("name") as string;
     const color = formData.get("color") as string;
-    await updateTag({ id, name, color });
-    return { success: true, action: getActionName("update") };
+    const result = await updateTag({ id, name, color });
+
+    if (!result.ok)
+      return err({
+        action,
+        message: result.error,
+      });
+    return ok({ action });
   }
 
   if (action === getActionName("delete")) {
     const id = formData.get("id") as string;
-    await deleteTag(id);
-    return { success: true, action: getActionName("delete") };
+    const result = await deleteTag(id);
+
+    if (!result.ok)
+      return err({
+        action,
+        message: result.error,
+      });
+
+    return ok({ action });
   }
 
-  return { success: false, action };
+  return err({ action: null, message: "Invalid action" });
 }
 
 interface AddTagModalProps {
@@ -117,11 +164,12 @@ interface AddTagModalProps {
 
 function AddTagModal({ isOpen, onClose }: AddTagModalProps) {
   const actionName = getActionName("create");
+
   const actionData = useActionResult(actionName);
   const isLoading = useActionIsLoading(actionName);
 
   useEffect(() => {
-    if (actionData?.success) onClose();
+    if (actionData?.ok) onClose();
   }, [actionData, onClose]);
 
   return (
@@ -136,6 +184,7 @@ function AddTagModal({ isOpen, onClose }: AddTagModalProps) {
           />
           <ModalHeader>Add New Tag</ModalHeader>
           <ModalBody>
+            <DisplayErrorMessage actionData={actionData} />
             <Input
               name="name"
               label="Name"
@@ -170,7 +219,7 @@ function EditTagModal({ isOpen, onClose, editingTag }: EditTagModalProps) {
   const isLoading = useActionIsLoading(actionName);
 
   useEffect(() => {
-    if (actionData?.success) onClose();
+    if (actionData?.ok) onClose();
   }, [actionData, onClose]);
 
   return (
@@ -185,6 +234,7 @@ function EditTagModal({ isOpen, onClose, editingTag }: EditTagModalProps) {
           />
           <ModalHeader>Edit Tag</ModalHeader>
           <ModalBody>
+            <DisplayErrorMessage actionData={actionData} />
             <Input
               name="name"
               label="Name"
@@ -220,7 +270,7 @@ function DeleteTagModal({ isOpen, onClose, deletingTag }: DeleteTagModalProps) {
   const isLoading = useActionIsLoading(actionName);
 
   useEffect(() => {
-    if (actionData?.success) onClose();
+    if (actionData?.ok) onClose();
   }, [actionData, onClose]);
 
   return (
@@ -235,6 +285,7 @@ function DeleteTagModal({ isOpen, onClose, deletingTag }: DeleteTagModalProps) {
           />
           <ModalHeader>Delete Tag</ModalHeader>
           <ModalBody>
+            <DisplayErrorMessage actionData={actionData} />
             <p>
               Are you sure you want to delete "{deletingTag?.name}"? This will
               remove the tag from all associated links.
@@ -346,10 +397,10 @@ function useFilteredTags(tags: Tag[]) {
 export default function Tags() {
   const { tags, links } = useLoaderData<typeof clientLoader>();
 
-  if ("error" in tags) {
+  if (!tags.ok) {
     return <div>Error loading tags {tags.error}</div>;
   }
-  if ("error" in links) {
+  if (!links.ok) {
     return <div>Error loading links {links.error}</div>;
   }
 
@@ -359,7 +410,7 @@ export default function Tags() {
     setSearchQuery,
     selectedTagFilters,
     setSelectedTagFilters,
-  } = useFilteredTags(tags);
+  } = useFilteredTags(tags.value);
 
   const {
     isOpen: isAddOpen,
@@ -381,8 +432,9 @@ export default function Tags() {
   const [deletingTag, setDeletingTag] = useState<Tag | null>(null);
 
   const getLinkCount = (tagId: string) => {
-    return links.filter((link) => link.tags.some((tag) => tag.id === tagId))
-      .length;
+    return links.value.filter((link) =>
+      link.tags.some((tag) => tag.id === tagId),
+    ).length;
   };
 
   const handleEdit = (tag: Tag) => {
@@ -402,7 +454,7 @@ export default function Tags() {
       <div className="flex flex-col gap-4">
         <TagSearch searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
         <TagPicker
-          tags={tags}
+          tags={tags.value}
           selectedTagFilters={selectedTagFilters}
           setSelectedTagFilters={setSelectedTagFilters}
         />

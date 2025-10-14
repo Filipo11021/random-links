@@ -1,4 +1,5 @@
 import { Button, Checkbox, Input, Link } from "@heroui/react";
+import { err, type Result } from "@repo/type-safe-errors";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import React from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
@@ -11,28 +12,24 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  try {
-    const authResponse = await authClient.signUp.email({
-      email,
-      password,
-      name: username,
+  const authResponse = await authClient.signUp.email({
+    email,
+    password,
+    name: username,
+  });
+
+  if (authResponse.error) {
+    return err({
+      message: authResponse.error.message ?? "Failed to sign up",
     });
-
-    if (authResponse.error) {
-      return { error: authResponse.error.message ?? "Failed to sign up" };
-    }
-
-    return redirect("/");
-  } catch (error) {
-    console.error(error);
-    return { error: "Failed to sign up" };
   }
+
+  return redirect("/");
 }
 
 export default function Component() {
   const [isVisible, setIsVisible] = React.useState(false);
-  const actionData = useActionData<{ error: string }>();
-  const error = actionData?.error;
+  const actionData = useActionData<Result<void, { message: string }>>();
   const navigation = useNavigation();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -47,7 +44,9 @@ export default function Component() {
           </span>
         </p>
         <Form className="flex flex-col gap-4" method="post">
-          {error && <p className="text-red-500">{error}</p>}
+          {!actionData?.ok && (
+            <p className="text-red-500">{actionData?.error.message}</p>
+          )}
           <Input
             isRequired
             label="Username"

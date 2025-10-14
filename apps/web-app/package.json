@@ -20,7 +20,8 @@
     "react-dom": "^19.1.1",
     "react-router": "^7.9.2",
     "better-auth": "catalog:",
-    "hono": "catalog:"
+    "hono": "catalog:",
+    "@repo/type-safe-errors": "workspace:*"
   },
   "devDependencies": {
     "@react-router/dev": "^7.9.2",

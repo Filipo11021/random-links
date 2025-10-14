@@ -10,6 +10,7 @@ import {
   SelectItem,
   useDisclosure,
 } from "@heroui/react";
+import { err, ok, type Result } from "@repo/type-safe-errors";
 import { Grid3x3, List, Plus, Search } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
@@ -38,6 +39,26 @@ export async function clientLoader() {
   return { links, tags };
 }
 
+type ActionData = Result<
+  {
+    action: "create" | "update" | "delete";
+  },
+  {
+    action: "create" | "update" | "delete" | null;
+    message: string;
+  }
+>;
+
+function DisplayErrorMessage({
+  actionData,
+}: {
+  actionData: ActionData | null | undefined;
+}) {
+  if (!actionData || actionData.ok) return null;
+
+  return <p className="text-red-500">{actionData.error.message}</p>;
+}
+
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const formData = await request.formData();
   const action = formData.get("_action");
@@ -47,22 +68,52 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     const url = formData.get("url") as string;
     const tagIds = formData.getAll("tagIds") as string[];
 
-    await createLink({ name, url, tagIds });
-    return { success: true, action: "create" };
-  } else if (action === "update") {
+    const result = await createLink({ name, url, tagIds });
+
+    if (!result.ok) {
+      return err({
+        action: "create",
+        message: result.error,
+      });
+    }
+
+    return ok({ action: "create" });
+  }
+
+  if (action === "update") {
     const id = formData.get("id") as string;
     const name = formData.get("name") as string;
     const url = formData.get("url") as string;
     const tagIds = formData.getAll("tagIds") as string[];
-    await updateLink({ id, name, url, tagIds });
-    return { success: true, action: "update" };
-  } else if (action === "delete") {
-    const id = formData.get("id") as string;
-    await deleteLink(id);
-    return { success: true, action: "delete" };
+
+    const result = await updateLink({ id, name, url, tagIds });
+
+    if (!result.ok) {
+      return err({
+        action: "update",
+        message: result.error,
+      });
+    }
+
+    return ok({ action: "update" });
   }
 
-  return { success: false, action };
+  if (action === "delete") {
+    const id = formData.get("id") as string;
+
+    const result = await deleteLink(id);
+
+    if (!result.ok) {
+      return err({
+        action: "delete",
+        message: result.error,
+      });
+    }
+
+    return ok({ action: "delete" });
+  }
+
+  return err({ action, message: "Invalid action" });
 }
 
 export default function Home() {
@@ -71,7 +122,7 @@ export default function Home() {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTagFilters, setSelectedTagFilters] = useState<string[]>([]);
-  const actionData = useActionData<{ success: boolean }>();
+  const actionData = useActionData<ActionData>();
 
   const {
     isOpen: isAddOpen,
@@ -93,7 +144,7 @@ export default function Home() {
   const [deletingLink, setDeletingLink] = useState<Link | null>(null);
 
   useEffect(() => {
-    if (actionData?.success) {
+    if (actionData?.ok) {
       onAddClose();
       onEditClose();
       onDeleteClose();
@@ -109,14 +160,14 @@ export default function Home() {
     setDeletingLink,
   ]);
 
-  if ("error" in links) {
+  if (!links.ok) {
     return <div>Error loading links {links.error}</div>;
   }
-  if ("error" in tags) {
+  if (!tags.ok) {
     return <div>Error loading tags {tags.error}</div>;
   }
 
-  const filteredLinks = links.filter((link) => {
+  const filteredLinks = links.value.filter((link) => {
     const matchesSearch =
       link.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       link.url.toLowerCase().includes(searchQuery.toLowerCase());
@@ -180,7 +231,7 @@ export default function Home() {
           className="flex-1"
         />
         <TagPicker
-          tags={tags}
+          tags={tags.value}
           selectedTagFilters={selectedTagFilters}
           setSelectedTagFilters={setSelectedTagFilters}
         />
@@ -200,7 +251,7 @@ export default function Home() {
       ) : (
         <LinkTable
           links={filteredLinks}
-          tags={tags}
+          tags={tags.value}
           onEdit={handleEdit}
           onDelete={handleDelete}
         />
@@ -212,6 +263,7 @@ export default function Home() {
             <input type="hidden" name="_action" value="create" />
             <ModalHeader>Add New Link</ModalHeader>
             <ModalBody>
+              <DisplayErrorMessage actionData={actionData} />
               <Input
                 name="name"
                 label="Name"
@@ -231,7 +283,7 @@ export default function Home() {
                 selectionMode="multiple"
                 placeholder="Select tags"
               >
-                {tags.map((tag) => (
+                {tags.value.map((tag) => (
                   <SelectItem key={tag.id}>{tag.name}</SelectItem>
                 ))}
               </Select>
@@ -255,6 +307,7 @@ export default function Home() {
             <input type="hidden" name="id" value={editingLink?.id} />
             <ModalHeader>Edit Link</ModalHeader>
             <ModalBody>
+              <DisplayErrorMessage actionData={actionData} />
               <Input
                 name="name"
                 label="Name"
@@ -277,7 +330,7 @@ export default function Home() {
                 placeholder="Select tags"
                 defaultSelectedKeys={editingLink?.tags.map((tag) => tag.id)}
               >
-                {tags.map((tag) => (
+                {tags.value.map((tag) => (
                   <SelectItem key={tag.id}>{tag.name}</SelectItem>
                 ))}
               </Select>
@@ -301,6 +354,7 @@ export default function Home() {
             <input type="hidden" name="id" value={deletingLink?.id} />
             <ModalHeader>Delete Link</ModalHeader>
             <ModalBody>
+              <DisplayErrorMessage actionData={actionData} />
               <p>Are you sure you want to delete "{deletingLink?.name}"?</p>
             </ModalBody>
             <ModalFooter>

@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { HTTPException } from "hono/http-exception";
 import { logger } from "hono/logger";
 import { appFactory } from "./app-factory";
 import { getAuth } from "./auth";
@@ -70,6 +71,13 @@ const app = new Hono<{
   .route("/", tagsApp)
   .get("/", (c) => {
     return c.text("Hello Hono!");
+  })
+  .onError((error, c) => {
+    if (error instanceof HTTPException) {
+      return error.getResponse();
+    }
+
+    return c.json({ error: error.message }, 500);
   });
 
 export type AppType = typeof app;

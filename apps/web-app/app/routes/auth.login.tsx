@@ -1,4 +1,5 @@
 import { Button, Checkbox, Input, Link } from "@heroui/react";
+import { err, type Result } from "@repo/type-safe-errors";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import React from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
@@ -18,7 +19,9 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
   });
 
   if (authResponse.error) {
-    return { error: authResponse.error.message };
+    return err({
+      message: authResponse.error.message ?? "Failed to log in",
+    });
   }
 
   return redirect("/");
@@ -27,8 +30,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
 export default function Login() {
   const [isVisible, setIsVisible] = React.useState(false);
   const navigation = useNavigation();
-  const actionData = useActionData<{ error: string }>();
-  const error = actionData?.error;
+  const actionData = useActionData<Result<void, { message: string }>>();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -42,7 +44,9 @@ export default function Login() {
           </span>
         </p>
         <Form className="flex flex-col gap-4" method="post">
-          {error && <p className="text-red-500">{error}</p>}
+          {!actionData?.ok && (
+            <p className="text-red-500">{actionData?.error.message}</p>
+          )}
           <Input
             isRequired
             label="Email"
