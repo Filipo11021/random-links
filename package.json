@@ -1,0 +1,11 @@
+{
+  "name": "@repo/root",
+  "private": true,
+  "devDependencies": {
+    "@biomejs/biome": "2.2.6"
+  },
+  "scripts": {
+    "format:fix": "biome check --write",
+    "format:check": "biome check ."
+  }
+}

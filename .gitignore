@@ -1,0 +1,6 @@
+node_modules/
+.wrangler
+.env
+.env.production
+.react-router
+build

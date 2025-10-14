@@ -1,0 +1,26 @@
+{
+  "name": "@repo/backend",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --minify",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
+  },
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "dependencies": {
+    "@hono/zod-validator": "^0.7.3",
+    "@prisma/adapter-d1": "^6.16.3",
+    "@prisma/client": "6.16.3",
+    "better-auth": "catalog:",
+    "hono": "catalog:",
+    "pino": "^10.0.0",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "@types/node": "^24.6.2",
+    "prisma": "^6.16.3",
+    "wrangler": "^4.42.2"
+  }
+}
