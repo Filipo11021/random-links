@@ -1,15 +1,15 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "backend",
+  "name": "random-links",
   "main": "src/index.ts",
   "compatibility_date": "2025-10-13",
-  "d1_databases": [
-    {
-      "binding": "D1_DATABASE",
-      "database_name": "test-random-links",
-      "database_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-    }
-  ]
+  // "d1_databases": [
+  //   {
+  //     "binding": "D1_DATABASE",
+  //     "database_name": "test-random-links",
+  //     "database_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+  //   }
+  // ]
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
