@@ -18,6 +18,13 @@ export const getAuth = (env: {
       enabled: true,
     },
     trustedOrigins: env.CORS_ORIGINS,
+    advanced: {
+      defaultCookieAttributes: {
+        sameSite: "none",
+        secure: true,
+        partitioned: true,
+      },
+    },
   });
 };
 
