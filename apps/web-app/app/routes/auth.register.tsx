@@ -19,7 +19,7 @@ export async function clientAction({ request }: Route.ClientActionArgs) {
     });
 
     if (authResponse.error) {
-      return { error: authResponse.error.message };
+      return { error: authResponse.error.message ?? "Failed to sign up" };
     }
 
     return redirect("/");
