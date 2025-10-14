@@ -3,13 +3,14 @@
   "name": "random-links",
   "main": "src/index.ts",
   "compatibility_date": "2025-10-13",
-  // "d1_databases": [
-  //   {
-  //     "binding": "D1_DATABASE",
-  //     "database_name": "test-random-links",
-  //     "database_id": "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-  //   }
-  // ]
+  "d1_databases": [
+    {
+      "binding": "D1_DATABASE",
+      "database_name": "random-links",
+      "database_id": "71613518-e527-4da0-b783-d7432ea5a865",
+      "migrations_dir": "migrations"
+    }
+  ]
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
