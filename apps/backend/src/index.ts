@@ -49,9 +49,7 @@ const authApp = appFactory
   });
 
 const app = new Hono<{
-  Bindings: {
-    CORS_ORIGINS: string;
-  };
+  Bindings: CloudflareBindings;
 }>()
   .use(logger(customLogger))
   .use("*", (c, next) => {

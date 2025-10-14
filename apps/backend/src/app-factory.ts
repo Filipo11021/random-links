@@ -11,12 +11,7 @@ export const appFactory = createFactory<{
     prisma: PrismaClient;
     logger: Logger;
   };
-  Bindings: {
-    D1_DATABASE: D1Database;
-    BETTER_AUTH_URL: string;
-    BETTER_AUTH_SECRET: string;
-    CORS_ORIGINS: string;
-  };
+  Bindings: CloudflareBindings;
 }>({
   initApp: (app) => {
     app.use("*", async (c, next) => {
