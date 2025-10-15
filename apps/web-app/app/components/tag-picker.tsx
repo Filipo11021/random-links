@@ -1,4 +1,5 @@
 import { Button, Chip } from "@heroui/react";
+import { useState } from "react";
 import type { Tag } from "~/data/types";
 
 interface TagPickerProps {
@@ -16,9 +17,10 @@ export function TagPicker({
   className = "",
   maxVisibleTags = 5,
 }: TagPickerProps) {
+  const [showAll, setShowAll] = useState(false);
   if (tags.length === 0) return null;
 
-  const visibleTags = tags.slice(0, maxVisibleTags);
+  const visibleTags = showAll ? tags : tags.slice(0, maxVisibleTags);
 
   const handleTagToggle = (tagId: string) => {
     if (selectedTagFilters.includes(tagId)) {
@@ -26,10 +28,6 @@ export function TagPicker({
     } else {
       setSelectedTagFilters([...selectedTagFilters, tagId]);
     }
-  };
-
-  const handleRemoveTag = (tagId: string) => {
-    setSelectedTagFilters(selectedTagFilters.filter((id) => id !== tagId));
   };
 
   return (
@@ -40,7 +38,6 @@ export function TagPicker({
           <Chip
             key={tag.id}
             onClick={() => handleTagToggle(tag.id)}
-            onClose={isSelected ? () => handleRemoveTag(tag.id) : undefined}
             style={{
               backgroundColor: tag.color,
               color: "#fff",
@@ -62,13 +59,10 @@ export function TagPicker({
           size="sm"
           variant="flat"
           onPress={() => {
-            const nextTag = tags[maxVisibleTags];
-            if (nextTag) {
-              handleTagToggle(nextTag.id);
-            }
+            setShowAll((prev) => !prev);
           }}
         >
-          +{tags.length - maxVisibleTags} more
+          {showAll ? "Show less" : `+${tags.length - maxVisibleTags} more`}
         </Button>
       )}
     </div>
