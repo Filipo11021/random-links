@@ -1,10 +1,4 @@
-import {
-  HeroUIProvider,
-  Navbar,
-  NavbarBrand,
-  NavbarContent,
-  NavbarItem,
-} from "@heroui/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/react";
 import {
   isRouteErrorResponse,
   Links,
@@ -15,6 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { UIProvider } from "~/ui/ui-provider";
 import type { Route } from "./+types/root";
 import { authClient } from "./auth-client";
 import { userContext } from "./context";
@@ -75,7 +70,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <HeroUIProvider>
+    <UIProvider>
       <div className="min-h-screen bg-gray-50">
         <Navbar isBordered maxWidth="full">
           <NavbarBrand>
@@ -108,7 +103,7 @@ export default function App() {
           <Outlet />
         </main>
       </div>
-    </HeroUIProvider>
+    </UIProvider>
   );
 }
 
