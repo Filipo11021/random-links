@@ -6,6 +6,9 @@
   },
   "scripts": {
     "format:fix": "biome check --write",
-    "format:check": "biome check ."
+    "format:check": "biome check .",
+    "dev": "pnpm -r --parallel dev",
+    "test": "pnpm -r --parallel test",
+    "typecheck": "pnpm -r --parallel typecheck"
   }
 }

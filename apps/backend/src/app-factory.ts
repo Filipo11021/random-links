@@ -1,4 +1,4 @@
-import { Session, User } from "better-auth";
+import type { Session, User } from "better-auth";
 import { createFactory } from "hono/factory";
 import { PrismaClient } from "./generated/prisma";
 import { type Logger, logger } from "./logger";
