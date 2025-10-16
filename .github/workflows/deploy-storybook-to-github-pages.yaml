@@ -1,0 +1,62 @@
+name: Build and Publish Storybook to GitHub Pages
+
+on:
+  push:
+    branches:
+      - "main"
+  # allow to run workflow manually
+  workflow_dispatch:
+
+# sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# allow one concurrent deployment and cancel in-progress runs
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+env:
+  PNPM_VERSION: 10
+  NODE_VERSION: 22
+
+defaults:
+  run:
+    working-directory: apps/web-app
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build storybook
+        run: pnpm run build-storybook
+
+      - name: Upload static files as artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: storybook-static
+
+      - id: deploy
+        name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
