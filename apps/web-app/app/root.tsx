@@ -1,19 +1,19 @@
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/react";
 import {
   isRouteErrorResponse,
   Links,
   Meta,
-  NavLink,
   Outlet,
   redirect,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "react-router";
 import { UIProvider } from "~/ui/ui-provider";
 import type { Route } from "./+types/root";
 import { authClient } from "./auth-client";
 import { userContext } from "./context";
 import "./app.css";
+import { AppNavbar } from "./app-navbar";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -50,6 +50,11 @@ export const clientMiddleware: Route.ClientMiddlewareFunction[] = [
   authMiddleware,
 ];
 
+export function clientLoader({ context }: Route.ClientLoaderArgs) {
+  const user = context.get(userContext);
+  return { user };
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
@@ -69,36 +74,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { user } = useLoaderData<typeof clientLoader>();
+
   return (
     <UIProvider>
       <div className="min-h-screen bg-gray-50">
-        <Navbar isBordered maxWidth="full">
-          <NavbarBrand>
-            <p className="font-bold text-xl">Random Links</p>
-          </NavbarBrand>
-          <NavbarContent className="hidden sm:flex gap-4" justify="center">
-            <NavbarItem>
-              <NavLink
-                to="/"
-                className={({ isActive }) =>
-                  isActive ? "text-primary font-semibold" : "text-foreground"
-                }
-              >
-                Links
-              </NavLink>
-            </NavbarItem>
-            <NavbarItem>
-              <NavLink
-                to="/tags"
-                className={({ isActive }) =>
-                  isActive ? "text-primary font-semibold" : "text-foreground"
-                }
-              >
-                Tags
-              </NavLink>
-            </NavbarItem>
-          </NavbarContent>
-        </Navbar>
+        <AppNavbar user={user} />
         <main className="container mx-auto px-4 py-8 max-w-7xl">
           <Outlet />
         </main>
