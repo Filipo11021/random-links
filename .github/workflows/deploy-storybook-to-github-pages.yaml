@@ -21,6 +21,9 @@ concurrency:
 env:
   PNPM_VERSION: 10
   NODE_VERSION: 22
+  # this must be an absolute path
+  # https://github.com/actions/upload-pages-artifact/issues/74
+  STORYBOOK_BUILD_OUTPUT_DIR: apps/web-app/storybook-static
 
 defaults:
   run:
@@ -29,9 +32,11 @@ defaults:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
+
     steps:
       - uses: actions/checkout@v5
 
@@ -55,7 +60,7 @@ jobs:
       - name: Upload static files as artifact
         uses: actions/upload-pages-artifact@v4
         with:
-          path: storybook-static
+          path: ${{ env.STORYBOOK_BUILD_OUTPUT_DIR }}
 
       - id: deploy
         name: Deploy to GitHub Pages
