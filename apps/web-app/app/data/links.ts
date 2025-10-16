@@ -1,15 +1,30 @@
 import { err, ok, type Result } from "@repo/type-safe-errors";
 import type { Link } from "~/data/types";
 import { apiClient } from "./api-client";
+import { createQuery } from "./cache";
 
-export const getAllLinks = async (): Promise<Result<Link[], string>> => {
-  const res = await apiClient.links.$get({ query: { tags: [] } });
+export const getAllLinks = async (options?: {
+  signal?: AbortSignal;
+}): Promise<Result<Link[], string>> => {
+  const res = await apiClient.links.$get(
+    { query: { tags: [] } },
+    {
+      init: {
+        signal: options?.signal,
+      },
+    },
+  );
   const data = await res.json();
 
   if ("error" in data) return err(data.error);
 
   return ok(data);
 };
+
+export const linksQuery = createQuery({
+  cacheKey: "links",
+  fetcher: getAllLinks,
+});
 
 export const createLink = async (input: {
   name: string;

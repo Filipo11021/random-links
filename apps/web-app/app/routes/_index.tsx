@@ -22,8 +22,8 @@ import {
 import { LinkCard } from "~/components/link-card";
 import { LinkTable } from "~/components/link-table";
 import { TagPicker } from "~/components/tag-picker";
-import { createLink, deleteLink, getAllLinks, updateLink } from "~/data/links";
-import { getAllTags } from "~/data/tags";
+import { createLink, deleteLink, linksQuery, updateLink } from "~/data/links";
+import { tagsQuery } from "~/data/tags";
 import type { Link } from "~/data/types";
 import type { Route } from "./+types/_index";
 
@@ -34,8 +34,12 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-export async function clientLoader() {
-  const [links, tags] = await Promise.all([getAllLinks(), getAllTags()]);
+export async function clientLoader({}: Route.ClientLoaderArgs) {
+  const [links, tags] = await Promise.all([
+    linksQuery.getData(),
+    tagsQuery.getData(),
+  ]);
+
   return { links, tags };
 }
 
@@ -62,6 +66,8 @@ function DisplayErrorMessage({
 export async function clientAction({ request }: Route.ClientActionArgs) {
   const formData = await request.formData();
   const action = formData.get("_action");
+
+  linksQuery.clearCache();
 
   if (action === "create") {
     const name = formData.get("name") as string;

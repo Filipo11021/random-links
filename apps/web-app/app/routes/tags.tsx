@@ -20,8 +20,8 @@ import {
 import { ColorPickerField } from "~/components/color-picker";
 import { TagCard } from "~/components/tag-card";
 import { TagPicker } from "~/components/tag-picker";
-import { getAllLinks } from "~/data/links";
-import { createTag, deleteTag, getAllTags, updateTag } from "~/data/tags";
+import { linksQuery } from "~/data/links";
+import { createTag, deleteTag, tagsQuery, updateTag } from "~/data/tags";
 import type { Tag } from "~/data/types";
 import type { Route } from "./+types/tags";
 
@@ -103,8 +103,11 @@ function DisplayErrorMessage({
   return <p className="text-red-500">{actionData?.error.message}</p>;
 }
 
-export async function clientLoader() {
-  const [tags, links] = await Promise.all([getAllTags(), getAllLinks()]);
+export async function clientLoader({}: Route.ClientLoaderArgs) {
+  const [tags, links] = await Promise.all([
+    tagsQuery.getData(),
+    linksQuery.getData(),
+  ]);
   return { tags, links };
 }
 
@@ -113,6 +116,8 @@ export async function clientAction({
 }: Route.ClientActionArgs): Promise<ActionData> {
   const formData = await request.formData();
   const action = formData.get(actionTypeName);
+
+  tagsQuery.clearCache();
 
   if (action === getActionName("create")) {
     const name = formData.get("name") as string;
