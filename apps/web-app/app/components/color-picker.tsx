@@ -20,15 +20,15 @@ function ColorPicker({ selectedColor, onColorChange }: ColorPickerProps) {
   return (
     <div>
       <label className="text-sm font-medium mb-2 block">Color</label>
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-4 gap-3">
         {COLOR_PRESETS.map((color) => (
           <button
             key={color.value}
             type="button"
             onClick={() => onColorChange(color.value)}
-            className={`w-full h-12 rounded-lg transition-all ${
+            className={`w-full h-12 rounded-lg transition-all cursor-pointer ${
               selectedColor === color.value
-                ? "ring-4 ring-blue-500 ring-offset-2"
+                ? "ring-4 ring-blue-500 ring-offset-2 ring-offset-content1"
                 : "hover:scale-105"
             }`}
             style={{ backgroundColor: color.value }}
