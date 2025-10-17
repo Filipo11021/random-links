@@ -11,6 +11,7 @@ import {
 } from "@heroui/react";
 import type { User } from "better-auth";
 import { NavLink } from "react-router";
+import { ThemeSwitcher } from "./components/theme-switcher";
 import { LogoutActionForm } from "./routes/auth.logout";
 
 export function AppNavbar({ user }: { user: User | null }) {
@@ -19,6 +20,7 @@ export function AppNavbar({ user }: { user: User | null }) {
       <NavbarBrand>
         <p className="font-bold text-xl">Random Links</p>
       </NavbarBrand>
+
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
           <NavLink
@@ -40,8 +42,11 @@ export function AppNavbar({ user }: { user: User | null }) {
             Tags
           </NavLink>
         </NavbarItem>
+      </NavbarContent>
 
+      <NavbarContent className="gap-6" justify="end">
         {user && <UserButton user={user} />}
+        <ThemeSwitcher />
       </NavbarContent>
     </Navbar>
   );
