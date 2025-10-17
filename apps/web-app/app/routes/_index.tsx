@@ -22,6 +22,7 @@ import {
 import { LinkCard } from "~/components/link-card";
 import { LinkTable } from "~/components/link-table";
 import { TagPicker } from "~/components/tag-picker";
+import { clearQueryCache } from "~/data/cache";
 import { createLink, deleteLink, linksQuery, updateLink } from "~/data/links";
 import { tagsQuery } from "~/data/tags";
 import type { Link } from "~/data/types";
@@ -64,10 +65,10 @@ function DisplayErrorMessage({
 }
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
+  clearQueryCache();
+
   const formData = await request.formData();
   const action = formData.get("_action");
-
-  linksQuery.clearCache();
 
   if (action === "create") {
     const name = formData.get("name") as string;

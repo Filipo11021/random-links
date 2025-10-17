@@ -20,6 +20,7 @@ import {
 import { ColorPickerField } from "~/components/color-picker";
 import { TagCard } from "~/components/tag-card";
 import { TagPicker } from "~/components/tag-picker";
+import { clearQueryCache } from "~/data/cache";
 import { linksQuery } from "~/data/links";
 import { createTag, deleteTag, tagsQuery, updateTag } from "~/data/tags";
 import type { Tag } from "~/data/types";
@@ -114,10 +115,10 @@ export async function clientLoader({}: Route.ClientLoaderArgs) {
 export async function clientAction({
   request,
 }: Route.ClientActionArgs): Promise<ActionData> {
+  clearQueryCache();
+
   const formData = await request.formData();
   const action = formData.get(actionTypeName);
-
-  tagsQuery.clearCache();
 
   if (action === getActionName("create")) {
     const name = formData.get("name") as string;

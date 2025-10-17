@@ -4,9 +4,12 @@ import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import React from "react";
 import { Form, redirect, useActionData, useNavigation } from "react-router";
 import { authClient } from "~/auth-client";
+import { clearQueryCache } from "~/data/cache";
 import type { Route } from "./+types/auth.register";
 
 export async function clientAction({ request }: Route.ClientActionArgs) {
+  clearQueryCache();
+
   const formData = await request.formData();
   const username = formData.get("username") as string;
   const email = formData.get("email") as string;
