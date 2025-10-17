@@ -12,7 +12,8 @@
       "!**/.wrangler",
       "!**/dist",
       "!**/build",
-      "!**/node_modules"
+      "!**/node_modules",
+      "!**/storybook-static"
     ]
   },
   "formatter": {
