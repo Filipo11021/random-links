@@ -27,8 +27,6 @@ export function LogoutActionForm({
 export async function clientAction({}: Route.ClientActionArgs): Promise<
   LogoutResult | Response
 > {
-  clearQueryCache();
-
   const res = await authClient.signOut();
 
   if (res.error) {

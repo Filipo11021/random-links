@@ -14,6 +14,7 @@ import { authClient } from "./auth-client";
 import { userContext } from "./context";
 import "./app.css";
 import { AppNavbar } from "./app-navbar";
+import { clearQueryCache } from "./data/cache";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -46,7 +47,19 @@ const authMiddleware: Route.ClientMiddlewareFunction = async (
   throw redirect("/auth/login");
 };
 
+const clearQueryCacheMiddleware: Route.ClientMiddlewareFunction = async (
+  { request },
+  next,
+) => {
+  if (request.method === "POST") {
+    clearQueryCache();
+  }
+
+  return next();
+};
+
 export const clientMiddleware: Route.ClientMiddlewareFunction[] = [
+  clearQueryCacheMiddleware,
   authMiddleware,
 ];
 

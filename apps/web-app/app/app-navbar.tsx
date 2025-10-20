@@ -24,7 +24,7 @@ export function AppNavbar({ user }: { user: User | null }) {
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
           <NavLink
-            to="/"
+            to="/links"
             className={({ isActive }) =>
               isActive ? "text-primary font-semibold" : "text-foreground"
             }
