@@ -21,27 +21,31 @@ export function AppNavbar({ user }: { user: User | null }) {
         <p className="font-bold text-xl">Random Links</p>
       </NavbarBrand>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem>
-          <NavLink
-            to="/links"
-            className={({ isActive }) =>
-              isActive ? "text-primary font-semibold" : "text-foreground"
-            }
-          >
-            Links
-          </NavLink>
-        </NavbarItem>
-        <NavbarItem>
-          <NavLink
-            to="/tags"
-            className={({ isActive }) =>
-              isActive ? "text-primary font-semibold" : "text-foreground"
-            }
-          >
-            Tags
-          </NavLink>
-        </NavbarItem>
+      <NavbarContent className="gap-2 flex sm:gap-4" justify="center">
+        {user && (
+          <>
+            <NavbarItem>
+              <NavLink
+                to="/links"
+                className={({ isActive }) =>
+                  isActive ? "text-primary font-semibold" : "text-foreground"
+                }
+              >
+                Links
+              </NavLink>
+            </NavbarItem>
+            <NavbarItem>
+              <NavLink
+                to="/tags"
+                className={({ isActive }) =>
+                  isActive ? "text-primary font-semibold" : "text-foreground"
+                }
+              >
+                Tags
+              </NavLink>
+            </NavbarItem>
+          </>
+        )}
       </NavbarContent>
 
       <NavbarContent className="gap-6" justify="end">
