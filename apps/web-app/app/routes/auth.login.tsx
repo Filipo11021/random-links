@@ -1,37 +1,71 @@
 import { Button, Checkbox, Input, Link } from "@heroui/react";
-import { err, type Result } from "@repo/type-safe-errors";
+import { type Result, tryAsync } from "@repo/type-safe-errors";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import React from "react";
-import { Form, redirect, useActionData, useNavigation } from "react-router";
+import {
+  Form,
+  Link as RouterLink,
+  redirect,
+  useActionData,
+  useNavigation,
+} from "react-router";
 import { authClient } from "~/auth-client";
-import { clearQueryCache } from "~/data/cache";
 import type { Route } from "./+types/auth.login";
 
-export async function clientAction({ request }: Route.ClientActionArgs) {
+type ActionData = Result<void, { message: string }>;
+
+function signIn({
+  email,
+  password,
+  remember,
+}: {
+  email: string;
+  password: string;
+  remember: boolean;
+}): Promise<Result<void, { message: string }>> {
+  return tryAsync(
+    async () => {
+      const res = await authClient.signIn.email({
+        email,
+        password,
+        rememberMe: remember,
+      });
+
+      if (res.error) {
+        throw Error(res.error.message);
+      }
+    },
+    (error) => ({
+      message: error instanceof Error ? error.message : "Failed to log in",
+    }),
+  );
+}
+
+export async function clientAction({
+  request,
+}: Route.ClientActionArgs): Promise<ActionData> {
   const formData = await request.formData();
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
   const remember = formData.get("remember") as string;
 
-  const authResponse = await authClient.signIn.email({
+  const authResponse = await signIn({
     email,
     password,
-    rememberMe: remember === "true",
+    remember: remember === "true",
   });
 
-  if (authResponse.error) {
-    return err({
-      message: authResponse.error.message ?? "Failed to log in",
-    });
+  if (!authResponse.ok) {
+    return authResponse;
   }
 
-  return redirect("/");
+  throw redirect("/");
 }
 
 export default function Login() {
   const [isVisible, setIsVisible] = React.useState(false);
   const navigation = useNavigation();
-  const actionData = useActionData<Result<void, { message: string }>>();
+  const actionData = useActionData<ActionData>();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -45,8 +79,8 @@ export default function Login() {
           </span>
         </p>
         <Form className="flex flex-col gap-4" method="post">
-          {!actionData?.ok && (
-            <p className="text-red-500">{actionData?.error.message}</p>
+          {actionData?.ok === false && (
+            <p className="text-red-500">{actionData.error.message}</p>
           )}
           <Input
             isRequired
@@ -79,9 +113,6 @@ export default function Login() {
             <Checkbox defaultSelected value="true" name="remember" size="sm">
               Remember me
             </Checkbox>
-            <Link className="text-default-500" href="#" size="sm">
-              Forgot password?
-            </Link>
           </div>
           <Button
             className="w-full"
@@ -93,7 +124,7 @@ export default function Login() {
           </Button>
         </Form>
         <p className="text-small text-center">
-          <Link href="#" size="sm">
+          <Link as={RouterLink} to="/auth/register" size="sm">
             Create an account
           </Link>
         </p>

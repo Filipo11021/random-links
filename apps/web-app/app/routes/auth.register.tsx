@@ -1,38 +1,65 @@
 import { Button, Checkbox, Input, Link } from "@heroui/react";
-import { err, type Result } from "@repo/type-safe-errors";
+import { type Result, tryAsync } from "@repo/type-safe-errors";
 import { EyeClosedIcon, EyeIcon } from "lucide-react";
 import React from "react";
-import { Form, redirect, useActionData, useNavigation } from "react-router";
+import {
+  Form,
+  Link as RouterLink,
+  redirect,
+  useActionData,
+  useNavigation,
+} from "react-router";
 import { authClient } from "~/auth-client";
-import { clearQueryCache } from "~/data/cache";
 import type { Route } from "./+types/auth.register";
 
-export async function clientAction({ request }: Route.ClientActionArgs) {
-  clearQueryCache();
+type ActionData = Result<void, { message: string }>;
 
+function signUp({
+  username,
+  email,
+  password,
+}: {
+  username: string;
+  email: string;
+  password: string;
+}): Promise<Result<void, { message: string }>> {
+  return tryAsync(
+    async () => {
+      const res = await authClient.signUp.email({
+        email,
+        password,
+        name: username,
+      });
+
+      if (res.error) {
+        throw Error(res.error.message);
+      }
+    },
+    (error) => ({
+      message: error instanceof Error ? error.message : "Failed to sign up",
+    }),
+  );
+}
+
+export async function clientAction({
+  request,
+}: Route.ClientActionArgs): Promise<ActionData> {
   const formData = await request.formData();
   const username = formData.get("username") as string;
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  const authResponse = await authClient.signUp.email({
-    email,
-    password,
-    name: username,
-  });
-
-  if (authResponse.error) {
-    return err({
-      message: authResponse.error.message ?? "Failed to sign up",
-    });
+  const authResponse = await signUp({ username, email, password });
+  if (!authResponse.ok) {
+    return authResponse;
   }
 
-  return redirect("/");
+  throw redirect("/");
 }
 
 export default function Component() {
   const [isVisible, setIsVisible] = React.useState(false);
-  const actionData = useActionData<Result<void, { message: string }>>();
+  const actionData = useActionData<ActionData>();
   const navigation = useNavigation();
 
   const toggleVisibility = () => setIsVisible(!isVisible);
@@ -47,8 +74,8 @@ export default function Component() {
           </span>
         </p>
         <Form className="flex flex-col gap-4" method="post">
-          {!actionData?.ok && (
-            <p className="text-red-500">{actionData?.error.message}</p>
+          {actionData?.ok === false && (
+            <p className="text-red-500">{actionData.error.message}</p>
           )}
           <Input
             isRequired
@@ -105,7 +132,7 @@ export default function Component() {
           </Button>
         </Form>
         <p className="text-small text-center">
-          <Link href="#" size="sm">
+          <Link as={RouterLink} to="/auth/login" size="sm">
             Already have an account? Log In
           </Link>
         </p>
