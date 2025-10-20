@@ -10,7 +10,7 @@
       "database_id": "71613518-e527-4da0-b783-d7432ea5a865",
       "migrations_dir": "migrations"
     }
-  ]
+  ],
   // "compatibility_flags": [
   //   "nodejs_compat"
   // ],
@@ -32,8 +32,11 @@
   // "ai": {
   //   "binding": "AI"
   // },
-  // "observability": {
-  //   "enabled": true,
-  //   "head_sampling_rate": 1
-  // }
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true
+    }
+  }
 }
