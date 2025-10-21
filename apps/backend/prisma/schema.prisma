@@ -39,6 +39,16 @@ model Tag {
   updatedAt DateTime @updatedAt
 }
 
+model FeaturePermission {
+  id   String @id @default(cuid(2))
+  featureName String @unique
+
+  users User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
   id            String    @id
   name          String
@@ -50,15 +60,16 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  tags  Tag[]
-  links Link[]
+  tags        Tag[]
+  links       Link[]
+  featurePermissions FeaturePermission[]
 
   username        String?
   displayUsername String?
 
   @@unique([email])
-  @@map("user")
   @@unique([username])
+  @@map("user")
 }
 
 model Session {
