@@ -5,24 +5,29 @@
     "dev": "wrangler dev",
     "deploy": "wrangler deploy --minify",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test ./src/**/*.test.ts",
+    "db:generate": "prisma generate",
+    "db:create-migration": "tsx ./src/cli/create-migration/exec.ts",
+    "db:apply-migrations": "tsx ./src/cli/apply-migrations/exec.ts"
   },
   "exports": {
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "better-auth": "catalog:",
+    "hono": "catalog:",
     "@hono/zod-validator": "^0.7.3",
     "@prisma/adapter-d1": "^6.16.3",
     "@prisma/client": "6.16.3",
     "pino": "^10.0.0",
-    "zod": "^4.1.11",
-    "better-auth": "catalog:",
-    "hono": "catalog:"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
-    "prisma": "^6.16.3",
-    "wrangler": "^4.42.2",
     "@types/node": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "prisma": "^6.16.3",
+    "tsx": "^4.20.6",
+    "wrangler": "^4.42.2"
   }
 }
