@@ -13,7 +13,7 @@ import {
 import { err, type Result } from "@repo/type-safe-errors";
 import { redirect, useFetcher, useNavigate } from "react-router";
 import { createLink } from "~/data/links";
-import { useTypeSafeLoaderData } from "~/use-loader-data";
+import { useTypeSafeRouteLoaderData } from "~/use-type-safe-route-loader-data";
 import type { Route } from "./+types/links.new";
 
 type ActionData = Result<void, { message: string }>;
@@ -39,7 +39,7 @@ export async function clientAction({
 
 export default function NewLinkModal() {
   const navigate = useNavigate();
-  const data = useTypeSafeLoaderData("routes/links");
+  const data = useTypeSafeRouteLoaderData("routes/links");
   const fetcher = useFetcher<ActionData>();
   const isPending = fetcher.state !== "idle";
   const { isError, error } = useActionError(fetcher.data);
