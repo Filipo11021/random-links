@@ -16,6 +16,7 @@ type ServerLoaderIfExists<Id extends RouteModuleId> = RouteModules[Id] extends {
   ? Loader
   : never;
 
+// data flow: ServerLoader -> ClientLoader -> Data
 type LoaderIfExists<Id extends RouteModuleId> =
   ClientLoaderIfExists<Id> extends never
     ? ServerLoaderIfExists<Id>
