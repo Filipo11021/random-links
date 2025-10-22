@@ -11,9 +11,9 @@ import {
   SelectItem,
 } from "@heroui/react";
 import { err, type Result } from "@repo/type-safe-errors";
-import { redirect, useFetcher, useLocation, useNavigate } from "react-router";
+import { redirect, useFetcher, useNavigate } from "react-router";
 import { createLink } from "~/data/links";
-import type { Tag } from "~/data/types";
+import { useTypeSafeLoaderData } from "~/use-loader-data";
 import type { Route } from "./+types/links.new";
 
 type ActionData = Result<void, { message: string }>;
@@ -31,7 +31,6 @@ export async function clientAction({
 
   if (!result.ok)
     return err({
-      action: "create",
       message: result.error,
     });
 
@@ -40,7 +39,7 @@ export async function clientAction({
 
 export default function NewLinkModal() {
   const navigate = useNavigate();
-  const state = useNewLinkState();
+  const data = useTypeSafeLoaderData("routes/links");
   const fetcher = useFetcher<ActionData>();
   const isPending = fetcher.state !== "idle";
   const { isError, error } = useActionError(fetcher.data);
@@ -49,7 +48,7 @@ export default function NewLinkModal() {
     navigate("..");
   }
 
-  if (!state?.tags) {
+  if (!data?.tags.ok) {
     return <div>Error loading tags</div>;
   }
 
@@ -79,7 +78,7 @@ export default function NewLinkModal() {
               selectionMode="multiple"
               placeholder="Select tags"
             >
-              {state.tags.map((tag) => (
+              {data.tags.value.map((tag) => (
                 <SelectItem key={tag.id}>{tag.name}</SelectItem>
               ))}
             </Select>
@@ -109,9 +108,4 @@ function useActionError(data: ActionData | undefined) {
   return {
     isError: false,
   } as const;
-}
-
-function useNewLinkState() {
-  const location = useLocation();
-  return location.state as { tags?: Tag[] } | undefined;
 }

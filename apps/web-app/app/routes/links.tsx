@@ -51,7 +51,7 @@ export default function Links() {
   };
 
   const onAddOpen = () => {
-    navigate("new", { state: { tags: tags.value } });
+    navigate("new");
   };
 
   return (
