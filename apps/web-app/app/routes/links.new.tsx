@@ -44,8 +44,8 @@ export default function NewLinkModal() {
   const isPending = fetcher.state !== "idle";
   const { isError, error } = useActionError(fetcher.data);
 
-  function onClose() {
-    navigate("..");
+  async function onClose() {
+    await navigate("..");
   }
 
   if (!data?.tags.ok) {

@@ -3,7 +3,7 @@ import { ok, type Result } from "@repo/type-safe-errors";
 class CacheStore {
   private store: Map<string, unknown> = new Map();
 
-  get(key: string): unknown | null {
+  get(key: string): unknown {
     return this.store.get(key) ?? null;
   }
 

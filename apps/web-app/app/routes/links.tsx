@@ -34,24 +34,22 @@ export default function Links() {
     const matchesSearch =
       link.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       link.url.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesTag =
-      selectedTagFilters.length === 0 ||
-      selectedTagFilters.every((selectedTagId) =>
-        link.tags.some((tag) => tag.id === selectedTagId),
-      );
+    const matchesTag = selectedTagFilters.every((selectedTagId) =>
+      link.tags.some((tag) => tag.id === selectedTagId),
+    );
     return matchesSearch && matchesTag;
   });
 
-  const handleEdit = (link: Link) => {
-    navigate(`${link.id}/edit`, { state: { link, tags: tags.value } });
+  const handleEdit = async (link: Link) => {
+    await navigate(`${link.id}/edit`, { state: { link, tags: tags.value } });
   };
 
-  const handleDelete = (link: Link) => {
-    navigate(`${link.id}/destroy`, { state: { link } });
+  const handleDelete = async (link: Link) => {
+    await navigate(`${link.id}/destroy`, { state: { link } });
   };
 
-  const onAddOpen = () => {
-    navigate("new");
+  const onAddOpen = async () => {
+    await navigate("new");
   };
 
   return (

@@ -58,8 +58,8 @@ export default function EditLinkModal() {
   if (!id) throw new Error("Link ID not found");
   if (!state?.link || !state?.tags) throw new Error("Link or tags not found");
 
-  function onClose() {
-    navigate("..");
+  async function onClose() {
+    await navigate("..");
   }
 
   return (

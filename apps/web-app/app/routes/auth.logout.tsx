@@ -1,7 +1,6 @@
 import { err, type Result } from "@repo/type-safe-errors";
 import { Form, redirect } from "react-router";
 import { authClient } from "~/auth-client";
-import { clearQueryCache } from "~/data/cache";
 import type { Route } from "./+types/auth.logout";
 
 const logoutActionName = Symbol().toString();
@@ -24,9 +23,9 @@ export function LogoutActionForm({
   );
 }
 
-export async function clientAction({}: Route.ClientActionArgs): Promise<
-  LogoutResult | Response
-> {
+export async function clientAction(
+  _: Route.ClientActionArgs,
+): Promise<LogoutResult | Response> {
   const res = await authClient.signOut();
 
   if (res.error) {

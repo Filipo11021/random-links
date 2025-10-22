@@ -38,11 +38,9 @@ export default function NewTagModal() {
   const isPending = fetcher.state !== "idle";
   const { isError, error } = useActionError(fetcher.data);
 
-  function onClose() {
-    navigate("..");
+  async function onClose() {
+    await navigate("..");
   }
-
-  console.log(fetcher.data);
 
   return (
     <Modal isOpen={true} onClose={onClose}>

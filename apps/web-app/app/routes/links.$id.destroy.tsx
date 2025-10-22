@@ -51,8 +51,8 @@ export default function DestroyLinkModal() {
   if (!id) throw new Error("Link ID not found");
   if (!state?.link) throw new Error("Link not found");
 
-  function onClose() {
-    navigate("..");
+  async function onClose() {
+    await navigate("..");
   }
 
   return (

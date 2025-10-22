@@ -52,8 +52,8 @@ export default function EditTagModal() {
   if (!id) throw new Error("Tag ID not found");
   if (!state?.tag) throw new Error("Tag not found");
 
-  function onClose() {
-    navigate("..");
+  async function onClose() {
+    await navigate("..");
   }
 
   return (

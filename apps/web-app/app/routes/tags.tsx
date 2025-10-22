@@ -9,7 +9,7 @@ import { tagsQuery } from "~/data/tags";
 import type { Tag } from "~/data/types";
 import type { Route } from "./+types/tags";
 
-export async function clientLoader({}: Route.ClientLoaderArgs) {
+export async function clientLoader(_: Route.ClientLoaderArgs) {
   const [tags, links] = await Promise.all([
     tagsQuery.getData(),
     linksQuery.getData(),
@@ -40,17 +40,17 @@ export default function Tags() {
     ).length;
   };
 
-  const handleEdit = (tag: Tag) => {
-    navigate(`${tag.id}/edit`, { state: { tag } });
+  const handleEdit = async (tag: Tag) => {
+    await navigate(`${tag.id}/edit`, { state: { tag } });
   };
 
-  const handleDelete = (tag: Tag) => {
-    navigate(`${tag.id}/destroy`, { state: { tag } });
+  const handleDelete = async (tag: Tag) => {
+    await navigate(`${tag.id}/destroy`, { state: { tag } });
   };
 
-  function onAddOpen() {
-    navigate("new");
-  }
+  const onAddOpen = async () => {
+    await navigate("new");
+  };
 
   return (
     <div className="space-y-6">
