@@ -1,0 +1,42 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "env": {
+    "browser": true
+  },
+  "plugins": ["import", "react", "promise", "react_perf", "unicorn"],
+  "rules": {
+    // correctness
+    "exhaustive-deps": "error",
+    "jsx-key": "error",
+    "react/jsx-no-target-blank": "error",
+    "react/jsx-no-duplicate-props": "error",
+    "react/no-danger-with-children": "error",
+    "promise/no-callback-in-promise": "error",
+    // perf
+    "no-await-in-loop": "error",
+    "no-useless-call": "error",
+    "unicorn/prefer-array-find": "error",
+    "unicorn/prefer-array-flat-map": "error",
+    // restriction
+    "no-default-export": "error",
+    "import/no-cycle": "error"
+  },
+  "overrides": [
+    {
+      "files": [
+        // react-router
+        "app/routes/*.tsx",
+        "root.tsx",
+        "routes.ts",
+        // storybook
+        "*.stories.tsx",
+        ".storybook/*.ts",
+        //configs
+        "*.config.ts"
+      ],
+      "rules": {
+        "no-default-export": "off"
+      }
+    }
+  ]
+}

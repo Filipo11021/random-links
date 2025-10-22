@@ -6,6 +6,6 @@
     "moduleResolution": "NodeNext",
     "strict": true,
     "skipLibCheck": true,
-    "lib": ["ESNext"]
+    "lib": ["ESNext", "DOM"]
   }
 }

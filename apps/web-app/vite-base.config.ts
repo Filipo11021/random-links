@@ -30,7 +30,6 @@ export function createViteConfig({ plugins }: { plugins: PluginOption[] }) {
             browser: {
               enabled: true,
               headless: true,
-              provider: "playwright",
               instances: [
                 {
                   browser: "chromium",

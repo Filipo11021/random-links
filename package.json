@@ -2,7 +2,7 @@
   "name": "@repo/root",
   "private": true,
   "devDependencies": {
-    "@biomejs/biome": "2.2.6"
+    "@biomejs/biome": "2.2.7"
   },
   "scripts": {
     "format:fix": "biome check --write",
