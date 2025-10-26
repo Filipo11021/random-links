@@ -5,37 +5,43 @@ import {
   CardBody,
   CardHeader,
   Chip,
+  Link,
 } from "@heroui/react";
 import { Edit, ExternalLink, Trash2 } from "lucide-react";
-import type { Link } from "../data/types";
+import type { Link as LinkItem } from "../data/types";
 
 interface LinkCardProps {
-  link: Link;
-  onEdit: (link: Link) => void;
-  onDelete: (link: Link) => void;
+  link: LinkItem;
+  onEdit: (link: LinkItem) => void;
+  onDelete: (link: LinkItem) => void;
 }
 
 export function LinkCard({ link, onEdit, onDelete }: LinkCardProps) {
+  const linkDomain = new URL(link.url).hostname;
+
   return (
-    <Card className="w-full">
-      <CardHeader className="flex justify-between items-start pb-2">
-        <div className="flex-1">
-          <h3 className="text-lg font-semibold">{link.name}</h3>
-          <a
+    <Card className="flex flex-col gap-1">
+      <CardHeader className="flex gap-2 items-start">
+        <div className="w-full flex flex-col gap-4">
+          <div>
+            <h3 className="text-lg font-semibold">{link.name}</h3>
+            <p className="text-sm text-default-600">{linkDomain}</p>
+          </div>
+          <Link
             href={link.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-blue-600 hover:underline flex items-center gap-1 mt-1"
+            className="text-sm flex gap-1"
           >
-            {link.url}
+            Open in new tab
             <ExternalLink size={14} />
-          </a>
+          </Link>
         </div>
         <ButtonGroup size="sm" variant="flat">
-          <Button isIconOnly onClick={() => onEdit(link)}>
+          <Button isIconOnly onPress={() => onEdit(link)}>
             <Edit size={16} />
           </Button>
-          <Button isIconOnly color="danger" onClick={() => onDelete(link)}>
+          <Button isIconOnly color="danger" onPress={() => onDelete(link)}>
             <Trash2 size={16} />
           </Button>
         </ButtonGroup>
