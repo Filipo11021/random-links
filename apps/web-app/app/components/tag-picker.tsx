@@ -17,7 +17,7 @@ export function TagPicker({
   className = "",
   maxVisibleTags = 5,
 }: TagPickerProps) {
-  const [showAll, setShowAll] = useState(false);
+  const [showAll, setShowAll] = useState(true);
   if (tags.length === 0) return null;
 
   const visibleTags = showAll ? tags : tags.slice(0, maxVisibleTags);
@@ -31,7 +31,7 @@ export function TagPicker({
   };
 
   return (
-    <div className={`flex gap-2 flex-wrap min-h-[2.5rem] ${className}`}>
+    <div className={`flex gap-2 flex-wrap min-h-10 ${className}`}>
       {visibleTags.map((tag) => {
         const isSelected = selectedTagFilters.includes(tag.id);
         return (
