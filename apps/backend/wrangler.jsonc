@@ -11,9 +11,16 @@
       "migrations_dir": "migrations"
     }
   ],
-  // "compatibility_flags": [
-  //   "nodejs_compat"
-  // ],
+  "placement": {
+    "mode": "smart"
+  },
+  "observability": {
+    "logs": {
+      "enabled": true,
+      "head_sampling_rate": 1,
+      "invocation_logs": true
+    }
+  }
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },
@@ -32,11 +39,4 @@
   // "ai": {
   //   "binding": "AI"
   // },
-  "observability": {
-    "logs": {
-      "enabled": true,
-      "head_sampling_rate": 1,
-      "invocation_logs": true
-    }
-  }
 }
