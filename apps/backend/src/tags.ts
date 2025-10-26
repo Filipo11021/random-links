@@ -11,7 +11,7 @@ export const tagsApp = appFactory
   .createApp()
   .get(
     "/tags",
-    zValidator("query", z.object({ name: z.string().optional() })),
+    zValidator("query", z.object({ name: z.string().max(1000).optional() })),
     async (c) => {
       const { name } = c.req.valid("query");
       const user = c.get("user");
@@ -40,7 +40,7 @@ export const tagsApp = appFactory
     zValidator(
       "json",
       z.object({
-        name: z.string().min(1),
+        name: z.string().min(1).max(1000),
         color: hexColorSchema,
       }),
     ),
@@ -65,7 +65,7 @@ export const tagsApp = appFactory
   )
   .delete(
     "/tags/:id",
-    zValidator("param", z.object({ id: z.string() })),
+    zValidator("param", z.object({ id: z.string().max(1000) })),
     async (c) => {
       const { id } = c.req.valid("param");
       const user = c.get("user");
@@ -83,8 +83,8 @@ export const tagsApp = appFactory
     zValidator(
       "json",
       z.object({
-        name: z.string().min(1),
-        id: z.string(),
+        name: z.string().min(1).max(1000),
+        id: z.string().max(1000),
         color: hexColorSchema,
       }),
     ),

@@ -6,7 +6,10 @@ export const linksApp = appFactory
   .createApp()
   .get(
     "/links",
-    zValidator("query", z.object({ tags: z.array(z.string()).optional() })),
+    zValidator(
+      "query",
+      z.object({ tags: z.array(z.string().max(1000)).max(100).optional() }),
+    ),
     async (c) => {
       const { tags } = c.req.valid("query");
       const user = c.get("user");
@@ -41,9 +44,9 @@ export const linksApp = appFactory
     zValidator(
       "json",
       z.object({
-        name: z.string().min(1),
-        url: z.url(),
-        tagIds: z.array(z.string()),
+        name: z.string().min(1).max(1000),
+        url: z.url().max(1000),
+        tagIds: z.array(z.string().max(1000)).max(100),
       }),
     ),
     async (c) => {
@@ -70,7 +73,7 @@ export const linksApp = appFactory
   )
   .delete(
     "/links/:id",
-    zValidator("param", z.object({ id: z.string() })),
+    zValidator("param", z.object({ id: z.string().max(1000) })),
     async (c) => {
       const { id } = c.req.valid("param");
       const user = c.get("user");
@@ -89,10 +92,10 @@ export const linksApp = appFactory
     zValidator(
       "json",
       z.object({
-        name: z.string().min(1),
-        url: z.url(),
-        id: z.string(),
-        tagIds: z.array(z.string()),
+        name: z.string().min(1).max(1000),
+        url: z.url().max(1000),
+        id: z.string().max(1000),
+        tagIds: z.array(z.string().max(1000)).max(100),
       }),
     ),
     async (c) => {
