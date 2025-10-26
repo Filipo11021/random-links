@@ -9,6 +9,8 @@
     "format:check": "biome check .",
     "dev": "pnpm -r --parallel dev",
     "test": "pnpm -r --parallel test",
-    "typecheck": "pnpm -r --parallel typecheck"
+    "typecheck": "pnpm -r --parallel typecheck",
+    "lint:check": "pnpm -r --parallel lint:check",
+    "lint:fix": "pnpm -r --parallel lint:fix"
   }
 }

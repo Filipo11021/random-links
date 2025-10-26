@@ -29,7 +29,7 @@ type LoaderReturnType<Loader> = Awaited<ReturnType<IsFunction<Loader>>>;
 export function useTypeSafeRouteLoaderData<
   Id extends RouteModuleId,
   Loader extends LoaderIfExists<Id>,
-  LoaderData extends LoaderReturnType<Loader>
+  LoaderData extends LoaderReturnType<Loader>,
 >(routeId: Id): LoaderData | undefined {
   const matches = useMatches();
 

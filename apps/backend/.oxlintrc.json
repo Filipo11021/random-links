@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../packages/oxlint-config/base.jsonc"],
+  "overrides": [
+    {
+      "files": ["*.config.ts", "src/index.ts"],
+      "rules": {
+        "no-default-export": "off"
+      }
+    }
+  ]
+}

@@ -20,23 +20,5 @@
     // restriction
     "no-default-export": "error",
     "import/no-cycle": "error"
-  },
-  "overrides": [
-    {
-      "files": [
-        // react-router
-        "app/routes/*.tsx",
-        "root.tsx",
-        "routes.ts",
-        // storybook
-        "*.stories.tsx",
-        ".storybook/*.ts",
-        //configs
-        "*.config.ts"
-      ],
-      "rules": {
-        "no-default-export": "off"
-      }
-    }
-  ]
+  }
 }

@@ -1,0 +1,6 @@
+{
+  "name": "@repo/oxlint-config",
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "extends": ["../../packages/oxlint-config/base.jsonc"],
+  "overrides": [
+    {
+      "files": [
+        "app/routes/*.tsx",
+        "root.tsx",
+        "routes.ts",
+        "*.stories.tsx",
+        ".storybook/*.ts",
+        "*.config.ts"
+      ],
+      "rules": {
+        "no-default-export": "off"
+      }
+    }
+  ]
+}

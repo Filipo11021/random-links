@@ -9,7 +9,9 @@
     "test": "tsx --test ./src/**/*.test.ts",
     "db:generate": "prisma generate",
     "db:create-migration": "tsx ./src/cli/create-migration/exec.ts",
-    "db:apply-migrations": "tsx ./src/cli/apply-migrations/exec.ts"
+    "db:apply-migrations": "tsx ./src/cli/apply-migrations/exec.ts",
+    "lint:check": "oxlint --type-aware",
+    "lint:fix": "oxlint --type-aware --fix"
   },
   "exports": {
     ".": "./src/index.ts"
@@ -28,6 +30,8 @@
     "typescript": "catalog:",
     "prisma": "^6.16.3",
     "tsx": "^4.20.6",
-    "wrangler": "^4.42.2"
+    "wrangler": "^4.42.2",
+    "oxlint": "catalog:",
+    "oxlint-tsgolint": "catalog:"
   }
 }
