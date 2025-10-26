@@ -27,6 +27,9 @@ export const tagsApp = appFactory
           },
           userId: user.id,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
 
       return c.json(tags);

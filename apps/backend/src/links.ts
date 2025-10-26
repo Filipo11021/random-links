@@ -29,6 +29,9 @@ export const linksApp = appFactory
         include: {
           tags: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
       return c.json(links);
     },
