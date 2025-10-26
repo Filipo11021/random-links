@@ -45,7 +45,7 @@ export default function NewLinkModal() {
   const { isError, error } = useActionError(fetcher.data);
 
   async function onClose() {
-    await navigate("..");
+    await navigate("..", { preventScrollReset: true });
   }
 
   if (!data?.tags.ok) {
@@ -55,7 +55,7 @@ export default function NewLinkModal() {
   return (
     <Modal isOpen={true} onClose={onClose}>
       <ModalContent>
-        <fetcher.Form method="post">
+        <fetcher.Form method="post" preventScrollReset>
           <ModalHeader>Add New Link</ModalHeader>
           <ModalBody>
             {isError && <Alert color="danger">{error}</Alert>}

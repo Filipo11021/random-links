@@ -48,13 +48,13 @@ export default function DestroyTagModal() {
   if (!state?.tag) throw new Error("Tag not found");
 
   async function onClose() {
-    await navigate("..");
+    await navigate("..", { preventScrollReset: true });
   }
 
   return (
     <Modal isOpen={true} onClose={onClose}>
       <ModalContent>
-        <fetcher.Form method="post">
+        <fetcher.Form method="post" preventScrollReset>
           <input hidden name="id" value={id} />
           <ModalHeader>Delete Tag</ModalHeader>
           <ModalBody>

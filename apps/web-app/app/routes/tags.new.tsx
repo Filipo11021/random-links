@@ -39,13 +39,13 @@ export default function NewTagModal() {
   const { isError, error } = useActionError(fetcher.data);
 
   async function onClose() {
-    await navigate("..");
+    await navigate("..", { preventScrollReset: true });
   }
 
   return (
     <Modal isOpen={true} onClose={onClose}>
       <ModalContent>
-        <fetcher.Form method="post">
+        <fetcher.Form method="post" preventScrollReset>
           <ModalHeader>Add New Tag</ModalHeader>
           <ModalBody>
             {isError && <Alert color="danger">{error}</Alert>}

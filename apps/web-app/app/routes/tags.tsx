@@ -41,15 +41,21 @@ export default function Tags() {
   };
 
   const handleEdit = async (tag: Tag) => {
-    await navigate(`${tag.id}/edit`, { state: { tag } });
+    await navigate(`${tag.id}/edit`, {
+      state: { tag },
+      preventScrollReset: true,
+    });
   };
 
   const handleDelete = async (tag: Tag) => {
-    await navigate(`${tag.id}/destroy`, { state: { tag } });
+    await navigate(`${tag.id}/destroy`, {
+      state: { tag },
+      preventScrollReset: true,
+    });
   };
 
   const onAddOpen = async () => {
-    await navigate("new");
+    await navigate("new", { preventScrollReset: true });
   };
 
   return (

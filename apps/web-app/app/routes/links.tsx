@@ -41,15 +41,21 @@ export default function Links() {
   });
 
   const handleEdit = async (link: Link) => {
-    await navigate(`${link.id}/edit`, { state: { link, tags: tags.value } });
+    await navigate(`${link.id}/edit`, {
+      state: { link, tags: tags.value },
+      preventScrollReset: true,
+    });
   };
 
   const handleDelete = async (link: Link) => {
-    await navigate(`${link.id}/destroy`, { state: { link } });
+    await navigate(`${link.id}/destroy`, {
+      state: { link },
+      preventScrollReset: true,
+    });
   };
 
   const onAddOpen = async () => {
-    await navigate("new");
+    await navigate("new", { preventScrollReset: true });
   };
 
   return (

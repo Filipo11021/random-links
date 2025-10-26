@@ -59,13 +59,13 @@ export default function EditLinkModal() {
   if (!state?.link || !state?.tags) throw new Error("Link or tags not found");
 
   async function onClose() {
-    await navigate("..");
+    await navigate("..", { preventScrollReset: true });
   }
 
   return (
     <Modal isOpen={true} onClose={onClose}>
       <ModalContent>
-        <fetcher.Form method="post">
+        <fetcher.Form method="post" preventScrollReset>
           <input hidden name="id" value={id} />
           <ModalHeader>Edit Link</ModalHeader>
           <ModalBody>
