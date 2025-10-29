@@ -18,6 +18,7 @@ export const ThemeSwitcher = () => {
           {theme === "dark" && <MoonIcon />}
           {theme === "light" && <SunIcon />}
           {theme === "system" && <MonitorIcon />}
+          <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownTrigger>
       <DropdownMenu onAction={(key) => setTheme(key as string)}>

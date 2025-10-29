@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Card, CardHeader } from "@heroui/react";
+import { Button, ButtonGroup, Card, CardHeader, Tooltip } from "@heroui/react";
 import { Edit, Trash2 } from "lucide-react";
 import type { Tag } from "../data/types";
 
@@ -25,12 +25,18 @@ export function TagCard({ tag, linkCount, onEdit, onDelete }: TagCardProps) {
           </div>
         </div>
         <ButtonGroup size="sm" variant="flat">
-          <Button isIconOnly onClick={() => onEdit(tag)}>
-            <Edit size={16} />
-          </Button>
-          <Button isIconOnly color="danger" onClick={() => onDelete(tag)}>
-            <Trash2 size={16} />
-          </Button>
+          <Tooltip closeDelay={150} content="Edit">
+            <Button isIconOnly onPress={() => onEdit(tag)}>
+              <Edit size={16} />
+              <span className="sr-only">Edit</span>
+            </Button>
+          </Tooltip>
+          <Tooltip closeDelay={150} content="Delete">
+            <Button isIconOnly color="danger" onPress={() => onDelete(tag)}>
+              <Trash2 size={16} />
+              <span className="sr-only">Delete</span>
+            </Button>
+          </Tooltip>
         </ButtonGroup>
       </CardHeader>
     </Card>

@@ -60,13 +60,16 @@ function UserButton({ user }: { user: User }) {
   return (
     <Dropdown placement="bottom-end">
       <DropdownTrigger>
-        <Avatar
-          className="transition-transform cursor-pointer"
-          color="secondary"
-          name={user.name}
-          size="sm"
-          src={user.image ?? undefined}
-        />
+        <div>
+          <Avatar
+            className="transition-transform cursor-pointer"
+            color="secondary"
+            name={user.name}
+            size="sm"
+            src={user.image ?? undefined}
+          />
+          <span className="sr-only">User menu</span>
+        </div>
       </DropdownTrigger>
       <DropdownMenu aria-label="Profile Actions" variant="flat">
         <DropdownItem key="profile" className="h-14 gap-2">

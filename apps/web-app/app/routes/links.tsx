@@ -126,7 +126,9 @@ function LinkHeader({ viewMode, setViewMode, onAddOpen }: LinkHeaderProps) {
           onPress={() => setViewMode("grid")}
         >
           <Grid3x3 size={20} />
+          <span className="sr-only">Cards view</span>
         </Button>
+
         <Button
           color="default"
           variant={viewMode === "table" ? "solid" : "flat"}
@@ -134,7 +136,9 @@ function LinkHeader({ viewMode, setViewMode, onAddOpen }: LinkHeaderProps) {
           onPress={() => setViewMode("table")}
         >
           <List size={20} />
+          <span className="sr-only">Table view</span>
         </Button>
+
         <Button
           color="primary"
           onPress={onAddOpen}

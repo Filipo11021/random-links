@@ -8,6 +8,7 @@ import {
   TableColumn,
   TableHeader,
   TableRow,
+  Tooltip,
 } from "@heroui/react";
 import { Edit, ExternalLink, Trash2 } from "lucide-react";
 import type { Link, Tag } from "../data/types";
@@ -63,16 +64,22 @@ export function LinkTable({ links, tags, onEdit, onDelete }: LinkTableProps) {
               </TableCell>
               <TableCell>
                 <ButtonGroup size="sm" variant="flat">
-                  <Button isIconOnly onClick={() => onEdit(link)}>
-                    <Edit size={16} />
-                  </Button>
-                  <Button
-                    isIconOnly
-                    color="danger"
-                    onPress={() => onDelete(link)}
-                  >
-                    <Trash2 size={16} />
-                  </Button>
+                  <Tooltip closeDelay={150} content="Edit">
+                    <Button isIconOnly onPress={() => onEdit(link)}>
+                      <Edit size={16} />
+                      <span className="sr-only">Edit</span>
+                    </Button>
+                  </Tooltip>
+                  <Tooltip closeDelay={150} content="Delete">
+                    <Button
+                      isIconOnly
+                      color="danger"
+                      onPress={() => onDelete(link)}
+                    >
+                      <Trash2 size={16} />
+                      <span className="sr-only">Delete</span>
+                    </Button>
+                  </Tooltip>
                 </ButtonGroup>
               </TableCell>
             </TableRow>
