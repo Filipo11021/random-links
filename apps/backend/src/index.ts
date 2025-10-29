@@ -6,6 +6,10 @@ import { appFactory } from "./app-factory";
 import { getAuth } from "./auth";
 import { linksApp } from "./links";
 import { customLogger } from "./logger";
+import {
+  type FeaturePermissionName,
+  featurePermissionsApp,
+} from "./permissions/permissions";
 import { tagsApp } from "./tags";
 
 const authApp = appFactory
@@ -69,6 +73,7 @@ const app = new Hono<{
   .route("/", authApp)
   .route("/", linksApp)
   .route("/", tagsApp)
+  .route("/", featurePermissionsApp)
   .get("/", (c) => {
     return c.text("Hello Hono!");
   })
@@ -81,4 +86,6 @@ const app = new Hono<{
   });
 
 export type AppType = typeof app;
+
 export default app;
+export type { FeaturePermissionName };

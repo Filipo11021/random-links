@@ -18,6 +18,7 @@ interface LinkCardProps {
   aiSummary: {
     handler: () => void;
     isPending: boolean;
+    enabled: boolean;
   };
 }
 
@@ -37,6 +38,7 @@ export function LinkCard({ link, onEdit, onDelete, aiSummary }: LinkCardProps) {
             type="button"
             onPress={aiSummary.handler}
             isPending={aiSummary.isPending}
+            enabled={aiSummary.enabled}
           />
           <Tooltip closeDelay={150} content="Edit">
             <Button isIconOnly onPress={() => onEdit(link)}>

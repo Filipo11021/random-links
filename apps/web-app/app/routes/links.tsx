@@ -6,6 +6,10 @@ import { AiSummaryModal } from "~/components/ai-summary";
 import { LinkCard } from "~/components/link-card";
 import { LinkTable } from "~/components/link-table";
 import { TagPicker } from "~/components/tag-picker";
+import {
+  featurePermissionsQuery,
+  hasFeaturePermission,
+} from "~/data/feature-permissions";
 import { linksQuery } from "~/data/links";
 import { tagsQuery } from "~/data/tags";
 import type { Link } from "~/data/types";
@@ -13,25 +17,32 @@ import type { Route } from "./+types/links";
 import { useGenerateAiSummary } from "./ai-summary.$linkId";
 
 export async function clientLoader(_: Route.ClientLoaderArgs) {
-  const [links, tags] = await Promise.all([
+  const [links, tags, featurePermissions] = await Promise.all([
     linksQuery.getData(),
     tagsQuery.getData(),
+    featurePermissionsQuery.getData(),
   ]);
 
-  return { links, tags };
+  return { links, tags, featurePermissions };
 }
 
 export default function Links() {
-  const { links, tags } = useLoaderData<typeof clientLoader>();
+  const { links, tags, featurePermissions } =
+    useLoaderData<typeof clientLoader>();
   const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTagFilters, setSelectedTagFilters] = useState<string[]>([]);
   const aiSummary = useGenerateAiSummary();
 
-  if (!links.ok || !tags.ok) {
+  if (!links.ok || !tags.ok || !featurePermissions.ok) {
     throw new Error("Failed to load data, please try refreshing the page.");
   }
+
+  const canCreateAiSummary = hasFeaturePermission(
+    "ai_summary",
+    featurePermissions.value,
+  );
 
   const filteredLinks = links.value.filter((link) => {
     const matchesSearch =
@@ -86,6 +97,7 @@ export default function Links() {
               onEdit={handleEdit}
               onDelete={handleDelete}
               aiSummary={{
+                enabled: canCreateAiSummary,
                 isPending: aiSummary.isPending(link.id),
                 handler: () => aiSummary.submit(link),
               }}

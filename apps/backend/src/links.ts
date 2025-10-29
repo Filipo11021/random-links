@@ -3,6 +3,7 @@ import { zValidator } from "@hono/zod-validator";
 import { generateText } from "ai";
 import z from "zod";
 import { appFactory } from "./app-factory";
+import { canCreateAiSummary } from "./permissions/ai-summary-permissions";
 
 export const linksApp = appFactory
   .createApp()
@@ -131,6 +132,19 @@ export const linksApp = appFactory
         return c.json({ error: "Unauthorized" }, 401);
       }
 
+      if (
+        !canCreateAiSummary({
+          userId: user.id,
+          prisma: c.get("prisma"),
+          link: { userId: user.id },
+        })
+      ) {
+        return c.json(
+          { error: "You are not authorized to create an AI summary" },
+          401,
+        );
+      }
+
       const { id } = c.req.valid("param");
 
       const link = await c.get("prisma").link.findUnique({ where: { id } });
@@ -145,7 +159,7 @@ export const linksApp = appFactory
       });
 
       const { text } = await generateText({
-        model: groq("openai/gpt-oss-20b"),
+        model: groq("openai/gpt-oss-120b"),
         prompt: `
 Summarize the content at this URL: ${link.url}.
 

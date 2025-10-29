@@ -1,6 +1,6 @@
 import { PrismaClient } from "../generated/prisma";
 
-const aiSummaryFeatureName = "ai_summary";
+export const aiSummaryFeatureName = "ai_summary";
 
 export async function canCreateAiSummary({
   userId,

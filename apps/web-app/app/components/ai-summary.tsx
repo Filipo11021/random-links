@@ -13,11 +13,17 @@ export function GenerateAiSummaryButton({
   isPending,
   type,
   onPress,
+  enabled,
 }: {
   isPending: boolean;
   type: "button";
   onPress: () => void;
+  enabled: boolean;
 }) {
+  if (!enabled) {
+    return null;
+  }
+
   return (
     <Tooltip closeDelay={150} content="AI Summary">
       <Button
