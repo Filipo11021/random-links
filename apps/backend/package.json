@@ -17,11 +17,13 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
-    "better-auth": "catalog:",
-    "hono": "catalog:",
+    "@ai-sdk/groq": "^2.0.24",
     "@hono/zod-validator": "^0.7.3",
     "@prisma/adapter-d1": "^6.16.3",
     "@prisma/client": "6.16.3",
+    "ai": "^5.0.76",
+    "better-auth": "catalog:",
+    "hono": "catalog:",
     "pino": "^10.0.0",
     "zod": "^4.1.11"
   },
@@ -30,7 +32,7 @@
     "typescript": "catalog:",
     "prisma": "^6.16.3",
     "tsx": "^4.20.6",
-    "wrangler": "^4.42.2",
+    "wrangler": "^4.45.1",
     "oxlint": "catalog:",
     "oxlint-tsgolint": "catalog:"
   }

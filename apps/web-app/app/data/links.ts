@@ -61,3 +61,16 @@ export const deleteLink = async (id: string): Promise<Result<{}, string>> => {
 
   return ok({});
 };
+
+export const linkAiSummary = async (
+  id: string,
+): Promise<Result<{ data: string }, string>> => {
+  const res = await apiClient.links[":id"]["ai-summary"].$post({
+    param: { id },
+  });
+  const json = await res.json();
+
+  if ("error" in json) return err(json.error);
+
+  return ok({ data: json.data });
+};

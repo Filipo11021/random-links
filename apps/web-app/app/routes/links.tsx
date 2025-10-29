@@ -2,6 +2,7 @@ import { Button, Input } from "@heroui/react";
 import { Grid3x3, List, Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { Outlet, useLoaderData, useNavigate } from "react-router";
+import { AiSummaryModal } from "~/components/ai-summary";
 import { LinkCard } from "~/components/link-card";
 import { LinkTable } from "~/components/link-table";
 import { TagPicker } from "~/components/tag-picker";
@@ -9,6 +10,7 @@ import { linksQuery } from "~/data/links";
 import { tagsQuery } from "~/data/tags";
 import type { Link } from "~/data/types";
 import type { Route } from "./+types/links";
+import { useGenerateAiSummary } from "./ai-summary.$linkId";
 
 export async function clientLoader(_: Route.ClientLoaderArgs) {
   const [links, tags] = await Promise.all([
@@ -25,6 +27,7 @@ export default function Links() {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedTagFilters, setSelectedTagFilters] = useState<string[]>([]);
+  const aiSummary = useGenerateAiSummary();
 
   if (!links.ok || !tags.ok) {
     throw new Error("Failed to load data, please try refreshing the page.");
@@ -82,6 +85,10 @@ export default function Links() {
               link={link}
               onEdit={handleEdit}
               onDelete={handleDelete}
+              aiSummary={{
+                isPending: aiSummary.isPending(link.id),
+                handler: () => aiSummary.submit(link),
+              }}
             />
           ))}
         </div>
@@ -95,6 +102,19 @@ export default function Links() {
           onDelete={handleDelete}
         />
       )}
+
+      {aiSummary.data?.ok === true && (
+        <AiSummaryModal
+          isOpen={true}
+          setIsOpen={() => {
+            aiSummary.reset();
+          }}
+          linkTitle={`${aiSummary.data.value.linkName}`}
+        >
+          {aiSummary.data?.value.data}
+        </AiSummaryModal>
+      )}
+
       <Outlet />
     </div>
   );

@@ -2,7 +2,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "random-links",
   "main": "src/index.ts",
-  "compatibility_date": "2025-10-13",
+  "compatibility_date": "2025-10-28",
   "d1_databases": [
     {
       "binding": "D1_DATABASE",
@@ -20,7 +20,8 @@
       "head_sampling_rate": 1,
       "invocation_logs": true
     }
-  }
+  },
+  "compatibility_flags": ["nodejs_compat"]
   // "vars": {
   //   "MY_VAR": "my-variable"
   // },

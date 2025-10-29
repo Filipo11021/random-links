@@ -9,14 +9,19 @@ import {
 } from "@heroui/react";
 import { Edit, ExternalLink, Trash2 } from "lucide-react";
 import type { Link as LinkItem } from "../data/types";
+import { GenerateAiSummaryButton } from "./ai-summary";
 
 interface LinkCardProps {
   link: LinkItem;
   onEdit: (link: LinkItem) => void;
   onDelete: (link: LinkItem) => void;
+  aiSummary: {
+    handler: () => void;
+    isPending: boolean;
+  };
 }
 
-export function LinkCard({ link, onEdit, onDelete }: LinkCardProps) {
+export function LinkCard({ link, onEdit, onDelete, aiSummary }: LinkCardProps) {
   const linkDomain = new URL(link.url).hostname;
 
   return (
@@ -28,6 +33,11 @@ export function LinkCard({ link, onEdit, onDelete }: LinkCardProps) {
         </div>
 
         <ButtonGroup size="sm" variant="flat">
+          <GenerateAiSummaryButton
+            type="button"
+            onPress={aiSummary.handler}
+            isPending={aiSummary.isPending}
+          />
           <Tooltip closeDelay={150} content="Edit">
             <Button isIconOnly onPress={() => onEdit(link)}>
               <Edit size={16} />

@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @plugin './ui/heroui.config.ts';
+@plugin "@tailwindcss/typography";
 
 @source '../../../node_modules/@heroui/theme/**/*.{js,ts,jsx,tsx}';
 @custom-variant dark (&:is(.dark *));
