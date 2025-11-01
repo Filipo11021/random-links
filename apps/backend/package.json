@@ -17,6 +17,7 @@
     ".": "./src/index.ts"
   },
   "dependencies": {
+    "@adonisjs/hash": "^9.1.1",
     "@ai-sdk/groq": "^2.0.24",
     "@hono/zod-validator": "^0.7.3",
     "@prisma/adapter-d1": "^6.16.3",
@@ -35,6 +36,6 @@
     "prisma": "^6.16.3",
     "tsx": "^4.20.6",
     "typescript": "catalog:",
-    "wrangler": "^4.45.1"
+    "wrangler": "^4.45.3"
   }
 }
