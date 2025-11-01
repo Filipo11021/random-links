@@ -70,6 +70,9 @@ const app = new Hono<{
       credentials: true,
     })(c, next);
   })
+  .get("/up", (c) => {
+    return c.text("OK");
+  })
   .route("/", authApp)
   .route("/", linksApp)
   .route("/", tagsApp)
@@ -87,5 +90,6 @@ const app = new Hono<{
 
 export type AppType = typeof app;
 
-export default app;
 export type { FeaturePermissionName };
+
+export default app;
