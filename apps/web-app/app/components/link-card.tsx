@@ -28,10 +28,13 @@ export function LinkCard({ link, onEdit, onDelete, aiSummary }: LinkCardProps) {
   return (
     <Card className="justify-between">
       <CardHeader className="flex items-start flex-1 justify-between">
-        <div>
+        <a href={link.url} target="_blank" rel="noopener noreferrer">
           <p className="text-sm text-default-600">{linkDomain}</p>
-          <h3 className="text-lg font-semibold">{link.name}</h3>
-        </div>
+          <div className="flex items-center gap-2">
+            <h3 className="text-lg font-semibold">{link.name}</h3>
+            <ExternalLink size={14} />
+          </div>
+        </a>
 
         <ButtonGroup size="sm" variant="flat">
           <GenerateAiSummaryButton
@@ -67,17 +70,6 @@ export function LinkCard({ link, onEdit, onDelete, aiSummary }: LinkCardProps) {
               </Chip>
             ))}
           </div>
-          <Button
-            as={"a"}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full"
-            color="default"
-          >
-            Open in new tab
-            <ExternalLink size={14} />
-          </Button>
         </div>
       </CardFooter>
     </Card>
