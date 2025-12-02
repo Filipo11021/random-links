@@ -10,7 +10,7 @@ import {
   TableRow,
   Tooltip,
 } from "@heroui/react";
-import { Edit, ExternalLink, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import type { Link, Tag } from "../data/types";
 
 interface LinkTableProps {
@@ -32,7 +32,7 @@ export function LinkTable({ links, tags, onEdit, onDelete }: LinkTableProps) {
       <TableBody emptyContent="No links found">
         {links.map((link) => {
           const linkTags = tags.filter((tag) =>
-            link.tags.some((t) => t.id === tag.id),
+            link.tags.some((t) => t.id === tag.id)
           );
           return (
             <TableRow key={link.id}>
@@ -46,7 +46,6 @@ export function LinkTable({ links, tags, onEdit, onDelete }: LinkTableProps) {
                 >
                   {link.url.substring(0, 50)}
                   {link.url.length > 50 ? "..." : ""}
-                  <ExternalLink size={14} />
                 </a>
               </TableCell>
               <TableCell>

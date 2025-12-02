@@ -7,7 +7,7 @@ import {
   Chip,
   Tooltip,
 } from "@heroui/react";
-import { Edit, ExternalLink, Trash2 } from "lucide-react";
+import { Edit, Trash2 } from "lucide-react";
 import type { Link as LinkItem } from "../data/types";
 import { GenerateAiSummaryButton } from "./ai-summary";
 
@@ -32,7 +32,6 @@ export function LinkCard({ link, onEdit, onDelete, aiSummary }: LinkCardProps) {
           <p className="text-sm text-default-600">{linkDomain}</p>
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-semibold">{link.name}</h3>
-            <ExternalLink size={14} />
           </div>
         </a>
 
