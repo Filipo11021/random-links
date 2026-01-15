@@ -4,6 +4,7 @@
   "devDependencies": {
     "@biomejs/biome": "2.2.7"
   },
+  "license": "MIT",
   "scripts": {
     "format:fix": "biome check --write",
     "format:check": "biome check .",
